@@ -110,5 +110,80 @@ export default function Signup() {
         </div> 
     ); 
 } 
+springboot:-
+package com.example.diploma.controller;
+
+
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.diploma.entity.Employ;
+import com.example.diploma.repo.EmployRepo;
+
+
+
+
+@RestController
+
+public class FactoryController {
+	
+	@Autowired
+	EmployRepo obj;
+	@PostMapping("/newemploy")
+	public String saveRecord(Employ db)
+	{
+		
+		obj.save(db);
+		return "Inserted";
+		
+		
+	}
+	@GetMapping("/get")
+	public List<Employ> getv()
+	{
+		return obj.findAll();
+	}
+	@PutMapping("/update/{id}")
+	public String getput(@PathVariable int id , @RequestBody Employ d)
+	{
+		Employ u=obj.findById(id).orElse(null);
+				if (u!=null)
+				{
+					u.setEmpname(d.getEmpname());
+					u.setJob(d.getJob());
+					u.setSalary(d.getSalary());
+					obj.save(u);
+					return "updated";
+				}
+				else
+				{
+					return "ID not found ";
+				}
+	}
+	
+	@DeleteMapping("/del/{id}")
+	public String delete(@PathVariable int id )
+	{
+		if (obj.existsById(id)) 
+		{
+			obj.deleteById(id);
+			return "deleted";
+		}
+		else
+		{
+			return "ID not found";
+		}
+	}
+	 
+}
 
 
